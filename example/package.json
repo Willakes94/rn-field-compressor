@@ -4,23 +4,22 @@
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
-    "ios": "expo start --ios",
-    "web": "expo start --web"
+    "ios": "expo start --ios"
   },
   "dependencies": {
-    "expo": "~52.0.0",
-    "expo-asset": "^57.0.18",
-    "expo-file-system": "~18.0.0",
-    "expo-image-manipulator": "~13.0.0",
-    "expo-image-picker": "~16.0.0",
-    "expo-status-bar": "~2.0.0",
-    "react": "18.3.1",
-    "react-native": "0.76.7"
+    "expo": "^57.0.24",
+    "expo-status-bar": "~2.1.0",
+    "expo-image-manipulator": "~14.0.0",
+    "expo-file-system": "~19.0.0",
+    "expo-image-picker": "~17.0.0",
+    "expo-asset": "~11.0.0",
+    "react": "19.2.3",
+    "react-native": "0.86.3"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
-    "@types/react": "~18.3.12",
-    "typescript": "^5.3.3"
+    "@types/react": "^19.1.1",
+    "typescript": "^5.9.3"
   },
   "private": true
 }
