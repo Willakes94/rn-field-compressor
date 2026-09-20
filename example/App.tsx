@@ -19,7 +19,7 @@ export default function App() {
   const pickAndCompressImage = async () => {
     // 1. Pick image from gallery
     const pickerResult = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      mediaTypes: ['images'],
       allowsEditing: false,
       quality: 1, // pick raw full-res image
     });
@@ -28,15 +28,16 @@ export default function App() {
       return;
     }
 
-    const rawUri = pickerResult.assets[0].uri;
-    setSelectedUri(rawUri);
+    const asset = pickerResult.assets[0];
+    setSelectedUri(asset.uri);
     setLoading(true);
     setResult(null);
 
     try {
       // 2. Compress using INSPECTION preset (1600px, 0.75 quality)
-      const metrics = await compressInspectionPhoto(rawUri, {
+      const metrics = await compressInspectionPhoto(asset.uri, {
         preset: 'INSPECTION',
+        originalSize: asset.fileSize,
       });
       setResult(metrics);
     } catch (error) {

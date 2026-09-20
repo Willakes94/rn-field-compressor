@@ -31,6 +31,11 @@ export interface CompressionOptions {
    * Predefined compression preset. Overrides custom parameters if provided.
    */
   preset?: CompressionPreset;
+
+  /**
+   * Optional pre-known original file size in bytes (e.g. from ImagePicker asset.fileSize).
+   */
+  originalSize?: number | null;
 }
 
 export interface CompressionResult {
