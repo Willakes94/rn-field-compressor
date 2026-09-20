@@ -9,7 +9,7 @@ import {
   ScrollView,
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import { compressInspectionPhoto, CompressionResult } from '../src';
+import { compressInspectionPhoto, CompressionResult } from './src';
 
 export default function App() {
   const [selectedUri, setSelectedUri] = useState<string | null>(null);
