@@ -87,3 +87,28 @@ export interface BatchOptions extends CompressionOptions {
    */
   onProgress?: (completed: number, total: number) => void;
 }
+
+export interface PickerCompressOptions extends CompressionOptions {
+  /**
+   * Whether to allow selecting multiple images from the photo library.
+   * Default: false
+   */
+  multiple?: boolean;
+
+  /**
+   * Maximum number of items that can be selected when multiple is true.
+   * Default: 20
+   */
+  selectionLimit?: number;
+
+  /**
+   * Concurrency limit when processing batch selection.
+   * Default: 2
+   */
+  concurrencyLimit?: number;
+
+  /**
+   * Batch progress callback.
+   */
+  onProgress?: (completed: number, total: number) => void;
+}

@@ -59,14 +59,36 @@ yarn add rn-field-compressor
 Ensure you have the Expo file system and image manipulation dependencies installed:
 
 ```bash
-npx expo install expo-image-manipulator expo-file-system
+npx expo install expo-image-manipulator expo-file-system expo-image-picker
 ```
 
 ---
 
 ## 🚀 Quick Start
 
-### 1. Single Image Compression
+### 1. One-Line Gallery Picker & Camera (New in v1.1) 📸
+
+```typescript
+import { pickAndCompress, captureAndCompress } from 'rn-field-compressor';
+
+// 🖼️ Pick from photo library & auto-compress
+const photo = await pickAndCompress({
+  preset: 'INSPECTION',
+});
+
+if (photo) {
+  console.log(`Ready for upload: ${photo.compressedSizeKB} KB (-${photo.reductionPercentage}%)`);
+}
+
+// 📷 Open camera, shoot & auto-compress
+const captured = await captureAndCompress({
+  preset: 'INSPECTION',
+});
+```
+
+---
+
+### 2. Single Image Compression (From URI)
 
 ```typescript
 import { compressInspectionPhoto } from 'rn-field-compressor';

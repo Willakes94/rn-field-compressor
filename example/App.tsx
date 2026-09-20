@@ -8,40 +8,47 @@ import {
   ActivityIndicator,
   ScrollView,
 } from 'react-native';
-import * as ImagePicker from 'expo-image-picker';
-import { compressInspectionPhoto, CompressionResult } from './src';
+import {
+  pickAndCompress,
+  captureAndCompress,
+  CompressionResult,
+} from './src';
 
 export default function App() {
-  const [selectedUri, setSelectedUri] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [result, setResult] = useState<CompressionResult | null>(null);
 
-  const pickAndCompressImage = async () => {
-    // 1. Pick image from gallery
-    const pickerResult = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ['images'],
-      allowsEditing: false,
-      quality: 1, // pick raw full-res image
-    });
-
-    if (pickerResult.canceled || !pickerResult.assets[0]) {
-      return;
-    }
-
-    const asset = pickerResult.assets[0];
-    setSelectedUri(asset.uri);
+  const handlePickFromGallery = async () => {
     setLoading(true);
     setResult(null);
-
     try {
-      // 2. Compress using INSPECTION preset (1600px, 0.75 quality)
-      const metrics = await compressInspectionPhoto(asset.uri, {
+      // 1-line call: Requests permission, launches library, compresses with INSPECTION preset
+      const res = await pickAndCompress({
         preset: 'INSPECTION',
-        originalSize: asset.fileSize,
       });
-      setResult(metrics);
+      if (res && !Array.isArray(res)) {
+        setResult(res);
+      }
     } catch (error) {
-      console.error('Compression failed:', error);
+      console.error('Gallery picker failed:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCaptureFromCamera = async () => {
+    setLoading(true);
+    setResult(null);
+    try {
+      // 1-line call: Requests camera permission, takes photo, compresses automatically
+      const res = await captureAndCompress({
+        preset: 'INSPECTION',
+      });
+      if (res) {
+        setResult(res);
+      }
+    } catch (error) {
+      console.error('Camera capture failed:', error);
     } finally {
       setLoading(false);
     }
@@ -49,30 +56,44 @@ export default function App() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>rn-field-compressor</Text>
+      <Text style={styles.title}>rn-field-compressor 📸</Text>
       <Text style={styles.subtitle}>
-        Vehicle Inspection & Field Operations Demo
+        Built-in Picker & Camera Demo (v1.1)
       </Text>
 
-      <TouchableOpacity
-        style={styles.button}
-        onPress={pickAndCompressImage}
-        disabled={loading}
-      >
-        <Text style={styles.buttonText}>
-          {loading ? 'Compressing...' : 'Select Heavy Photo to Test'}
-        </Text>
-      </TouchableOpacity>
+      <View style={styles.buttonGroup}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={handlePickFromGallery}
+          disabled={loading}
+        >
+          <Text style={styles.buttonText}>
+            {loading ? 'Processing...' : '🖼️ Pick & Compress (Gallery)'}
+          </Text>
+        </TouchableOpacity>
 
-      {loading && <ActivityIndicator size="large" color="#0284c7" style={{ marginTop: 20 }} />}
+        <TouchableOpacity
+          style={[styles.button, styles.cameraButton]}
+          onPress={handleCaptureFromCamera}
+          disabled={loading}
+        >
+          <Text style={styles.buttonText}>
+            {loading ? 'Processing...' : '📷 Capture & Compress (Camera)'}
+          </Text>
+        </TouchableOpacity>
+      </View>
+
+      {loading && <ActivityIndicator size="large" color="#38bdf8" style={{ marginTop: 24 }} />}
 
       {result && (
         <View style={styles.card}>
-          <Text style={styles.cardTitle}>Compression Benchmark</Text>
+          <Text style={styles.cardTitle}>Real-time Benchmark</Text>
           
           <View style={styles.statRow}>
             <Text style={styles.statLabel}>Original Size:</Text>
-            <Text style={styles.statValue}>{result.originalSizeKB} KB ({(result.originalSizeKB / 1024).toFixed(2)} MB)</Text>
+            <Text style={styles.statValue}>
+              {result.originalSizeKB} KB ({(result.originalSizeKB / 1024).toFixed(2)} MB)
+            </Text>
           </View>
 
           <View style={styles.statRow}>
@@ -81,7 +102,7 @@ export default function App() {
           </View>
 
           <View style={styles.statRow}>
-            <Text style={styles.statLabel}>Reduction:</Text>
+            <Text style={styles.statLabel}>Bandwidth Saved:</Text>
             <Text style={[styles.statValue, styles.success]}>-{result.reductionPercentage}%</Text>
           </View>
 
@@ -91,11 +112,11 @@ export default function App() {
           </View>
 
           <View style={styles.statRow}>
-            <Text style={styles.statLabel}>Dimensions:</Text>
+            <Text style={styles.statLabel}>Final Dimensions:</Text>
             <Text style={styles.statValue}>{result.width} x {result.height}px</Text>
           </View>
 
-          <Text style={styles.previewLabel}>Compressed Preview (Plates & Details Sharp):</Text>
+          <Text style={styles.previewLabel}>Optimized Output (Plates & Details Sharp):</Text>
           <Image source={{ uri: result.uri }} style={styles.previewImage} resizeMode="contain" />
         </View>
       )}
@@ -105,7 +126,7 @@ export default function App() {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 24,
+    padding: 20,
     alignItems: 'center',
     backgroundColor: '#0f172a',
     minHeight: '100%',
@@ -119,36 +140,42 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 14,
     color: '#94a3b8',
-    marginBottom: 24,
+    marginBottom: 20,
     textAlign: 'center',
+  },
+  buttonGroup: {
+    width: '100%',
+    gap: 12,
   },
   button: {
     backgroundColor: '#0284c7',
     paddingVertical: 14,
-    paddingHorizontal: 24,
+    paddingHorizontal: 20,
     borderRadius: 8,
-    width: '100%',
     alignItems: 'center',
+  },
+  cameraButton: {
+    backgroundColor: '#0f766e',
   },
   buttonText: {
     color: '#ffffff',
     fontWeight: '600',
-    fontSize: 16,
+    fontSize: 15,
   },
   card: {
     backgroundColor: '#1e293b',
     borderRadius: 12,
-    padding: 20,
+    padding: 18,
     width: '100%',
-    marginTop: 24,
+    marginTop: 20,
     borderWidth: 1,
     borderColor: '#334155',
   },
   cardTitle: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: '700',
     color: '#38bdf8',
-    marginBottom: 16,
+    marginBottom: 14,
   },
   statRow: {
     flexDirection: 'row',
@@ -175,13 +202,13 @@ const styles = StyleSheet.create({
   previewLabel: {
     color: '#94a3b8',
     fontSize: 12,
-    marginTop: 16,
+    marginTop: 14,
     marginBottom: 8,
   },
   previewImage: {
     width: '100%',
-    height: 220,
+    height: 240,
     borderRadius: 8,
-    backgroundColor: '#0f172a',
+    backgroundColor: '#020617',
   },
 });
