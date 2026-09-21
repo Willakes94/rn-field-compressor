@@ -15,7 +15,10 @@
         {
           "photosPermission": "The app needs access to your photos to test compression."
         }
-      ]
+      ],
+      "expo-font",
+      "expo-asset",
+      "expo-status-bar"
     ]
   }
 }
