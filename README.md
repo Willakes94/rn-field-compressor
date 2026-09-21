@@ -38,7 +38,8 @@ In field operations (such as **vehicle insurance inspections**, field services, 
 
 | Scenario | Original Size | Compressed Size | Reduction | Legibility (Chassis/Plates) | Processing Time |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Field Sample (Verified)** | 1.32 MB | **239 KB** | **-82.4%** | ✅ Crisp & Sharp | ~352 ms |
+| **Physical Device Test (Verified)** | 5.44 MB | **462 KB** | **-91.7%** | ✅ Crisp & Sharp (1600x2134) | 232 ms |
+| **Field Sample (Small)** | 1.32 MB | **239 KB** | **-82.4%** | ✅ Crisp & Sharp | ~352 ms |
 | **Vehicle Front (4K)** | 9.4 MB | **385 KB** | **-95.9%** | ✅ Crisp & Sharp | ~170 ms |
 | **Chassis / VIN Stamp** | 7.8 MB | **320 KB** | **-95.8%** | ✅ Fully readable | ~150 ms |
 | **Batch (20 Photos)** | 184.0 MB | **7.4 MB** | **-95.9%** | ✅ All approved | ~3.1 s (chunked) |
