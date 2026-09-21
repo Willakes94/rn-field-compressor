@@ -1,6 +1,6 @@
 # rn-field-compressor 📸 ⚡
 
-[![npm version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/Willakes94/rn-field-compressor)
+[![npm version](https://img.shields.io/badge/version-1.1.0-blue.svg)](https://github.com/Willakes94/rn-field-compressor)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue?logo=typescript)](https://www.typescriptlang.org/)
 [![Platform](https://img.shields.io/badge/platform-React%20Native%20%7C%20Expo-brightgreen.svg)](https://reactnative.dev)
@@ -35,6 +35,10 @@ In field operations (such as **vehicle insurance inspections**, field services, 
 ---
 
 ## 📊 Real-World Benchmark
+
+<p align="center">
+  <img src="assets/demo-benchmark.png" width="300" alt="rn-field-compressor Real-time Benchmark" style="border-radius: 16px;" />
+</p>
 
 | Scenario | Original Size | Compressed Size | Reduction | Legibility (Chassis/Plates) | Processing Time |
 | :--- | :--- | :--- | :--- | :--- | :--- |
@@ -110,7 +114,7 @@ async function handlePhotoCapture(photoUri: string) {
 
 ---
 
-### 2. Memory-Safe Batch Compression (Inspection Checklist)
+### 3. Memory-Safe Batch Compression (Inspection Checklist)
 
 ```typescript
 import { compressBatch } from 'rn-field-compressor';
@@ -137,7 +141,7 @@ async function processInspection() {
 
 ---
 
-### 3. Using the React Hook (`useFieldCompressor`)
+### 4. Using the React Hook (`useFieldCompressor`)
 
 ```tsx
 import React from 'react';
